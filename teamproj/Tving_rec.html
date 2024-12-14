@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오늘의 영화 추천</title>
+    <style>
+      /* 기본 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #141414;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* 컨테이너 스타일 */
+      .container {
+        background-color: #1f1f1f;
+        max-width: 600px;
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      /* 제목 */
+      h1 {
+        color: #ffffff;
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+
+      /* 장르 선택 버튼 */
+      .genre-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .genre-buttons button {
+        background-color: #fc2565;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 20px;
+        font-size: 1em;
+        margin: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 30%;
+      }
+
+      .genre-buttons button.selected {
+        background-color: #c60e45;
+      }
+
+      .genre-buttons button:hover {
+        background-color: #c60e45;
+      }
+
+      /* 추천 버튼 스타일 */
+      button.recommend-btn {
+        background-color: #ffb800;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button.recommend-btn:hover {
+        background-color: #c5a215;
+      }
+
+      /* 추천 결과 */
+      #recommendation {
+        margin-top: 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #ffffff;
+        display: flex; /* 영화 제목과 이미지를 가로로 배치 */
+        align-items: center; /* 세로 가운데 정렬 */
+        justify-content: center;
+      }
+
+      #recommendation img {
+        margin-left: 20px; /* 영화 제목과 이미지 간 간격 */
+        max-width: 150px; /* 이미지 크기 제한 */
+        max-height: 200px; /* 이미지 높이 제한 */
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      /* 영화 포스터 스타일 */
+      .poster {
+        margin-top: 20px;
+        max-width: 100%;
+        max-height: 400px; /* 이미지의 최대 높이를 400px로 제한 */
+        border-radius: 10px;
+        cursor: pointer;
+        object-fit: cover; /* 비율을 유지하면서 화면에 맞게 잘라내기 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>오늘의 영화 추천</h1>
+
+      <!-- 장르 선택 버튼 -->
+      <div class="genre-buttons">
+        <button onclick="toggleGenre('로맨스')">로맨스</button>
+        <button onclick="toggleGenre('공포/스릴러')">공포/스릴러</button>
+        <button onclick="toggleGenre('액션')">액션</button>
+        <button onclick="toggleGenre('SF/판타지')">SF/판타지</button>
+        <button onclick="toggleGenre('코미디')">코미디</button>
+        <button onclick="toggleGenre('애니메이션')">애니메이션</button>
+      </div>
+
+      <button class="recommend-btn" onclick="recommendMovie()">
+        추천 영화 보기
+      </button>
+
+      <div id="recommendation">
+        <p>추천 받고 싶은 장르를 선택하고 버튼을 클릭하세요!</p>
+      </div>
+    </div>
+
+    <script>
+      const movies = {
+        액션: [
+          {
+            name: "강철비",
+            poster: "프입 6조 코드_/포스터/액션/강철비.jpg",
+            link: "../teamproj/tving_action/1.html",
+          },
+          {
+            name: "도굴",
+            poster: "프입 6조 코드_/포스터/액션/도굴.jpg",
+            link: "../teamproj/tving_action/2.html",
+          },
+          {
+            name: "백드롭 파파",
+            poster: "프입 6조 코드_/포스터/액션/백드롭 파파.jpg",
+            link: "../teamproj/tving_action/3.html",
+          },
+          {
+            name: "범죄도시 2",
+            poster: "프입 6조 코드_/포스터/액션/범죄도시 2.jpg",
+            link: "../teamproj/tving_action/4.html",
+          },
+          {
+            name: "신세계",
+            poster: "프입 6조 코드_/포스터/액션/신세계.jpg",
+            link: "../teamproj/tving_action/5.html",
+          },
+          {
+            name: "아수라",
+            poster: "프입 6조 코드_/포스터/액션/아수라.jpg",
+            link: "../teamproj/tving_action/6.html",
+          },
+          {
+            name: "하트맨",
+            poster: "프입 6조 코드_/포스터/액션/히트맨.jpg",
+            link: "../teamproj/tving_action/8.html",
+          },
+          {
+            name: "타짜",
+            poster: "프입 6조 코드_/포스터/액션/타자.jpg",
+            link: "../teamproj/tving_action/7.html",
+          },
+        ],
+        로맨스: [
+          {
+            name: "어느날",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/어느날.jpg",
+            link: "../teamproj/tving_romance/어느날.html",
+          },
+          {
+            name: "연애 빠진 로맨스",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/연애 빠진 로맨스.jpg",
+            link: "../teamproj/tving_romance/연애 빠진 로맨스.html",
+          },
+          {
+            name: "오늘의 연애",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/오늘의 연애.jpg",
+            link: "../teamproj/tving_romance/오늘의 연애.html",
+          },
+          {
+            name: "카페 6",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/카페 6.jpg",
+            link: "../teamproj/tving_romance/카페6.html",
+          },
+          {
+            name: "클래식",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/클래식.jpg",
+            link: "../teamproj/tving_romance/클래식.html",
+          },
+          {
+            name: "헤어질 결심",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/헤어질 결심.jpg",
+            link: "../teamproj/tving_romance/헤어질 결심.html",
+          },
+          {
+            name: "히로인실격",
+            poster: "프입 6조 코드_/포스터/로맨스/티빙/히로인 실격.jpg",
+            link: "../teamproj/tving_romance/히로인실격.html",
+          },
+          {
+            name: "나의 소녀시대",
+            poster: "프입 6조 코드_/포스터/로맨스/넷플릭스/나의 소녀시대.jpg",
+            link: "../teamproj/Netflix_romance/나의 소녀시대.html",
+          },
+        ],
+        코미디: [
+          {
+            name: "그것만이 내 세상",
+            poster:
+              "프입 6조 코드_/포스터/코미디/티빙/그것만이 내 세상_티빙.jpeg",
+            link: "../teamproj/tving_comedy/3.html",
+          },
+          {
+            name: "극한직업",
+            poster: "프입 6조 코드_/포스터/코미디/티빙/극한직업_티빙.jpeg",
+            link: "../teamproj/tving_comedy/2.html",
+          },
+          {
+            name: "미션 파서블",
+            poster: "프입 6조 코드_/포스터/코미디/티빙/미션 파서블_티빙.jpeg",
+            link: "../teamproj/tving_comedy/6.html",
+          },
+          {
+            name: "삼진그룹 영어토익반",
+            poster: "프입 6조 코드_/포스터/코미디/티빙/삼진_티빙.jpeg",
+            link: "../teamproj/tving_comedy/4.html",
+          },
+          {
+            name: "수상한 그녀",
+            poster: "프입 6조 코드_/포스터/코미디/티빙/수상한 그녀_티빙.jpeg",
+            link: "../teamproj/tving_comedy/7.html",
+          },
+          {
+            name: "신과 함께",
+            poster: "프입 6조 코드_/포스터/코미디/티빙/신과 함께_티빙.jpeg",
+            link: "../teamproj/tving_comedy/1.html",
+          },
+          {
+            name: "웰컴 투 동막골",
+            poster:
+              "프입 6조 코드_/포스터/코미디/티빙/웰컴 투 동막골_티빙.jpeg",
+            link: "../teamproj/tving_comedy/8.html",
+          },
+          {
+            name: "전우치",
+            poster: "프입 6조 코드_/포스터/코미디/티빙/전우치_티빙.jpeg",
+            link: "../teamproj/tving_comedy/5.html",
+          },
+        ],
+        "공포/스릴러": [
+          {
+            name: "드래그 미 투 헬",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/티빙/드래그 미 투 헬.jpg",
+            link: "../teamproj/tving_horror/1.html",
+          },
+          {
+            name: "빌로우 적과의 동거",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/티빙/빌로우 적과의 동거.jpg",
+            link: "../teamproj/tving_horror/2.html",
+          },
+          {
+            name: "사일런스",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/티빙/사일런스.jpg",
+            link: "../teamproj/tving_horror/3.html",
+          },
+          {
+            name: "살인의 추억",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/티빙/살인의 추억.jpg",
+            link: "../teamproj/tving_horror/4.html",
+          },
+          {
+            name: "소스 코드",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/티빙/소스 코드.jpg",
+            link: "../teamproj/tving_horror/5.html",
+          },
+          {
+            name: "언힌지드",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/티빙/언힌지드.jpg",
+            link: "../teamproj/tving_horror/6.html",
+          },
+          {
+            name: "장화,홍련",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/티빙/장화,홍련.jpg",
+            link: "../teamproj/tving_horror/7.html",
+          },
+          {
+            name: "클로브히치 킬러",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/티빙/클로브히치 킬러.jpg",
+            link: "../teamproj/tving_horror/8.html",
+          },
+        ],
+        "SF/판타지": [
+          {
+            name: "나는 내일, 어제의 너와 만난다",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 나는 내일, 어제의 너와 만난다.jpeg",
+            link: "../teamproj/tving_fantasy/7.html",
+          },
+          {
+            name: "당신, 거기 있어줄래요",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 당신, 거기 있어줄래요.jpeg",
+            link: "../teamproj/tving_fantasy/8.html",
+          },
+          {
+            name: "미드나잇 인 파리",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 미드나잇 인 파리.jpeg",
+            link: "../teamproj/tving_fantasy/3.html",
+          },
+          {
+            name: "신과 함께-죄와 벌",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 신과 함께-죄와 벌.jpeg",
+            link: "../teamproj/tving_fantasy/2.html",
+          },
+          {
+            name: "비바리움",
+            poster: "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 비바리움.jpeg",
+            link: "../teamproj/tving_fantasy/5.html",
+          },
+          {
+            name: "원더랜드",
+            poster: "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 원더랜드.jpeg",
+            link: "../teamproj/tving_fantasy/1.html",
+          },
+          {
+            name: "판의 미로 오필리아와 세 개의 열쇠",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 판의 미로 오필리아와 세 개의 열쇠.jpeg",
+            link: "../teamproj/tving_fantasy/4.html",
+          },
+          {
+            name: "패딩턴",
+            poster: "프입 6조 코드_/포스터/SF판타지/티빙/티빙 SF 패딩턴.jpeg",
+            link: "../teamproj/tving_fantasy/6.html",
+          },
+        ],
+        애니메이션: [
+          {
+            name: "거울 속 외딴 성",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 거울 속 외딴 성.jpeg",
+            link: "../teamproj/tving_animation/7.html",
+          },
+          {
+            name: "괴물의 아이",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 괴물의 아이.jpeg",
+            link: "../teamproj/tving_animation/1.html",
+          },
+          {
+            name: "너의 이름은",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 너의 이름은.jpg",
+            link: "../teamproj/tving_animation/5.html",
+          },
+          {
+            name: "마당을 나온 암탉",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 마당을 나온 암탉.jpeg",
+            link: "../teamproj/tving_animation/8.html",
+          },
+          {
+            name: "목소리의 형태",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 목소리의 형태.jpeg",
+            link: "../teamproj/tving_animation/3.html",
+          },
+          {
+            name: "시간을 달리는 소녀",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 시간을 달리는 소녀.jpeg",
+            link: "../teamproj/tving_animation/2.html",
+          },
+          {
+            name: "언어의 정원",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 언어의 정원.jpeg",
+            link: "../teamproj/tving_animation/4.html",
+          },
+          {
+            name: "하울의 움직이는 성",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/티빙/티빙 애니 하울의 움직이는 성.jpeg",
+            link: "../teamproj/tving_animation/6.html",
+          },
+        ],
+      };
+
+      // 선택된 장르를 저장할 배열
+      let selectedGenres = [];
+
+      // 장르 선택/취소 함수
+      function toggleGenre(genre) {
+        const button = event.target;
+        if (selectedGenres.includes(genre)) {
+          selectedGenres = selectedGenres.filter((item) => item !== genre);
+          button.classList.remove("selected");
+        } else {
+          selectedGenres.push(genre);
+          button.classList.add("selected");
+        }
+      }
+
+      // 영화 추천 함수
+      function recommendMovie() {
+        if (selectedGenres.length > 0) {
+          let moviePool = [];
+          selectedGenres.forEach((genre) => {
+            if (movies[genre]) {
+              movies[genre].forEach((movie) => {
+                moviePool.push(movie);
+              });
+            }
+          });
+
+          if (moviePool.length > 0) {
+            const randomMovie =
+              moviePool[Math.floor(Math.random() * moviePool.length)];
+            document.getElementById("recommendation").innerHTML = `
+                <p>오늘의 영화: <br> ${randomMovie.name}</p>
+                <a href="${randomMovie.link}">
+                    <img src="${randomMovie.poster}" alt="${randomMovie.name} 포스터">
+                </a>
+            `;
+          } else {
+            document.getElementById("recommendation").innerText =
+              "선택한 장르에 해당하는 영화가 없습니다.";
+          }
+        } else {
+          document.getElementById("recommendation").innerText =
+            "장르를 선택해주세요.";
+        }
+      }
+    </script>
+  </body>
+</html>

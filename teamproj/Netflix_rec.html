@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오늘의 영화 추천</title>
+    <style>
+      /* 기본 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #141414;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* 컨테이너 스타일 */
+      .container {
+        background-color: #1f1f1f;
+        max-width: 600px;
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      /* 제목 */
+      h1 {
+        color: #ffffff;
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+
+      /* 장르 선택 버튼 */
+      .genre-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .genre-buttons button {
+        background-color: #e50914;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 20px;
+        font-size: 1em;
+        margin: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 30%;
+      }
+
+      .genre-buttons button.selected {
+        background-color: #860007;
+      }
+
+      .genre-buttons button:hover {
+        background-color: #860007;
+      }
+
+      /* 추천 버튼 스타일 */
+      button.recommend-btn {
+        background-color: #ffb800;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button.recommend-btn:hover {
+        background-color: #c5a215;
+      }
+
+      /* 추천 결과 */
+      #recommendation {
+        margin-top: 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #ffffff;
+        display: flex; /* 영화 제목과 이미지를 가로로 배치 */
+        align-items: center; /* 세로 가운데 정렬 */
+        justify-content: center;
+      }
+
+      #recommendation img {
+        margin-left: 20px; /* 영화 제목과 이미지 간 간격 */
+        max-width: 150px; /* 이미지 크기 제한 */
+        max-height: 200px; /* 이미지 높이 제한 */
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      /* 영화 포스터 스타일 */
+      .poster {
+        margin-top: 20px;
+        max-width: 100%;
+        max-height: 400px; /* 이미지의 최대 높이를 400px로 제한 */
+        border-radius: 10px;
+        cursor: pointer;
+        object-fit: cover; /* 비율을 유지하면서 화면에 맞게 잘라내기 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>오늘의 영화 추천</h1>
+
+      <!-- 장르 선택 버튼 -->
+      <div class="genre-buttons">
+        <button onclick="toggleGenre('로맨스')">로맨스</button>
+        <button onclick="toggleGenre('공포/스릴러')">공포/스릴러</button>
+        <button onclick="toggleGenre('액션')">액션</button>
+        <button onclick="toggleGenre('SF/판타지')">SF/판타지</button>
+        <button onclick="toggleGenre('코미디')">코미디</button>
+        <button onclick="toggleGenre('애니메이션')">애니메이션</button>
+      </div>
+
+      <button class="recommend-btn" onclick="recommendMovie()">
+        추천 영화 보기
+      </button>
+
+      <div id="recommendation">
+        <p>추천 받고 싶은 장르를 선택하고 버튼을 클릭하세요!</p>
+      </div>
+    </div>
+
+    <script>
+      // 각 장르에 속하는 영화 목록
+      const movies = {
+        "공포/스릴러": [
+          {
+            name: "겟아웃",
+            poster: "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/겟아웃.jpg",
+            link: "./Netflix_horror/movie26.html",
+          },
+          {
+            name: "47 미터",
+            poster: "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/47 미터.jpg",
+            link: "./Netflix_horror/movie25.html",
+          },
+          {
+            name: "다빈치 코드",
+            poster:
+              "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/다빈치코드.jpg",
+            link: "./Netflix_horror/movie27.html",
+          },
+          {
+            name: "런",
+            poster: "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/런.jpg",
+            link: "./Netflix_horror/movie28.html",
+          },
+          {
+            name: "버드 박스",
+            poster:
+              "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/버드 박스.jpg",
+            link: "./Netflix_horror/movie29.html",
+          },
+          {
+            name: "부산행",
+            poster: "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/부산행.jpg",
+            link: "./Netflix_horror/movie30.html",
+          },
+          {
+            name: "컨저링",
+            poster: "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/컨저링.jpg",
+            link: "./Netflix_horror/movie31.html",
+          },
+          {
+            name: "콰이어트 플레이스",
+            poster:
+              "./프입 6조 코드_/포스터/공포스릴러_/넷플릭스/콰이어트 플레이스.jpg",
+            link: "./Netflix_horror/movie32.html",
+          },
+        ],
+        로맨스: [
+          {
+            name: "그 여름의 일주일",
+            poster:
+              "./프입 6조 코드_/포스터/로맨스/넷플릭스/그 여름의 일주일.jpg",
+            link: "./Netflix_romance/그 여름의 일주일.html",
+          },
+          {
+            name: "나의 소녀시대",
+            poster: "./프입 6조 코드_/포스터/로맨스/넷플릭스/나의 소녀시대.jpg",
+            link: "./Netflix_romance/나의 소녀시대.html",
+          },
+          {
+            name: "라라랜드",
+            poster: "./프입 6조 코드_/포스터/로맨스/넷플릭스/라라랜드.jpg",
+            link: "./Netflix_romance/라라랜드.html",
+          },
+          {
+            name: "먼 훗날 우리",
+            poster: "./프입 6조 코드_/포스터/로맨스/넷플릭스/먼 훗날 우리.jpg",
+            link: "./Netflix_romance/먼 훗날 우리.html",
+          },
+          {
+            name: "어바웃타임",
+            poster: "./프입 6조 코드_/포스터/로맨스/넷플릭스/어바웃타임.jpg",
+            link: "./Netflix_romance/어바웃타임.html",
+          },
+          {
+            name: "유열의 음악앨범",
+            poster:
+              "./프입 6조 코드_/포스터/로맨스/넷플릭스/유열의 음악앨범.jpg",
+            link: "./Netflix_romance/유열의 음악앨범.html",
+          },
+          {
+            name: "이터널 선샤인",
+            poster:
+              "./프입 6조 코드_/포스터/로맨스/넷플릭스/이터널 선샤인1.jpg",
+            link: "./Netflix_romance/이터널 선샤인.html",
+          },
+          {
+            name: "트와일라잇",
+            poster: "./프입 6조 코드_/포스터/로맨스/넷플릭스/트와일라잇.jpg",
+            link: "./Netflix_romance/트와일라잇.html",
+          },
+        ],
+        코미디: [
+          {
+            name: "카우보이의 노래",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/카우보이의 노래_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/1.html",
+          },
+          {
+            name: "빅대디",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/빅대디_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/2.html",
+          },
+          {
+            name: "내 여자친구의 결혼식",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/brides maids_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/3.html",
+          },
+          {
+            name: "두리벤지",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/두리벤지_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/4.html",
+          },
+          {
+            name: "내 이름은 돌러마이트",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/내 이름은 돌러마이트_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/5.html",
+          },
+          {
+            name: "The fundamentals of caring",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/The fundamentals of caring_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/6.html",
+          },
+          {
+            name: "머더 미스터리",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/머더 미스터리_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/7.html",
+          },
+          {
+            name: "열차를 털다",
+            poster:
+              "프입 6조 코드_/포스터/코미디/넷플릭스/rob a train_넷플릭스.jpeg",
+            link: "../teamproj/Netflix_comedy/8.html",
+          },
+        ],
+        "SF/판타지": [
+          {
+            name: "구스범스-몬스터의 역습",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 구스범스-몬스터의 역습.jpeg",
+            link: "../teamproj/Netflix_fantasy/3.html",
+          },
+          {
+            name: "나이트북-밤의 이야기꾼",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 나이트북-밤의 이야기꾼.jpeg",
+            link: "../teamproj/Netflix_fantasy/6.html",
+          },
+          {
+            name: "마스크",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 마스크.jpeg",
+            link: "../teamproj/Netflix_fantasy/2.html",
+          },
+          {
+            name: "잭 스나이더의 저스티스 리그",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 잭 스나이더의 저스티스 리그.jpeg",
+            link: "../teamproj/Netflix_fantasy/4.html",
+          },
+          {
+            name: "미이라",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 미이라.jpeg",
+            link: "../teamproj/Netflix_fantasy/5.html",
+          },
+          {
+            name: "상견니",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 상견니.jpeg",
+            link: "../teamproj/Netflix_fantasy/8.html",
+          },
+          {
+            name: "선과 악의 학교",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 선과 악의 학교.jpeg",
+            link: "../teamproj/Netflix_fantasy/1.html",
+          },
+          {
+            name: "열차를 털다",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 원더풀 라이프.jpeg",
+            link: "../teamproj/Netflix_fantasy/7.html",
+          },
+        ],
+
+        애니메이션: [
+          {
+            name: "구스범스-몬스터의 역습",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/넷플릭스/넷플 SF 구스범스-몬스터의 역습.jpeg",
+            link: "../teamproj/Netflix_fantasy/3.html",
+          },
+          {
+            name: "나이트북-밤의 이야기꾼",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 나이트북-밤의 이야기꾼.jpeg",
+            link: "../teamproj/Netflix_fantasy/6.html",
+          },
+          {
+            name: "마스크",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 마스크.jpeg",
+            link: "../teamproj/Netflix_fantasy/2.html",
+          },
+          {
+            name: "잭 스나이더의 저스티스 리그",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 잭 스나이더의 저스티스 리그.jpeg",
+            link: "../teamproj/Netflix_fantasy/4.html",
+          },
+          {
+            name: "미이라",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 미이라.jpeg",
+            link: "../teamproj/Netflix_fantasy/5.html",
+          },
+          {
+            name: "상견니",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 상견니.jpeg",
+            link: "../teamproj/Netflix_fantasy/8.html",
+          },
+          {
+            name: "선과 악의 학교",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 선과 악의 학교.jpeg",
+            link: "../teamproj/Netflix_fantasy/1.html",
+          },
+          {
+            name: "열차를 털다",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/넷플릭스/넷플 SF 원더풀 라이프.jpeg",
+            link: "../teamproj/Netflix_fantasy/7.html",
+          },
+        ],
+        액션: [
+          {
+            name: "올드가드",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/올드가드.jpg",
+            link: "../teamproj/Netflix_action/7.html",
+          },
+          {
+            name: "그레이맨",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/그레이맨.jpg",
+            link: "../teamproj/Netflix_action/1.html",
+          },
+          {
+            name: "레드노티스",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/레드노티스.jpg",
+            link: "../teamproj/Netflix_action/3.html",
+          },
+          {
+            name: "무도실무관",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/무도실무관.jpg",
+            link: "../teamproj/Netflix_action/4.html",
+          },
+          {
+            name: "발레리나",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/발레리나.jpg",
+            link: "../teamproj/Netflix_action/5.html",
+          },
+          {
+            name: "킹스맨",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/킹스맨.jpg",
+            link: "../teamproj/Netflix_action/8.html",
+          },
+          {
+            name: "길복순",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/길복순.jpg",
+            link: "../teamproj/Netflix_action/2.html",
+          },
+          {
+            name: "범죄도시",
+            poster: "프입 6조 코드_/포스터/액션/넷플릭스/범죄도시.jpg",
+            link: "../teamproj/Netflix_action/6.html",
+          },
+        ],
+        // 추가적인 영화와 장르를 같은 형식으로 추가할 수 있습니다
+      };
+
+      // 선택된 장르를 저장할 배열
+      let selectedGenres = [];
+
+      // 장르 선택/취소 함수
+      function toggleGenre(genre) {
+        const button = event.target;
+        if (selectedGenres.includes(genre)) {
+          selectedGenres = selectedGenres.filter((item) => item !== genre);
+          button.classList.remove("selected");
+        } else {
+          selectedGenres.push(genre);
+          button.classList.add("selected");
+        }
+      }
+
+      // 영화 추천 함수
+      function recommendMovie() {
+        if (selectedGenres.length > 0) {
+          let moviePool = [];
+          selectedGenres.forEach((genre) => {
+            if (movies[genre]) {
+              movies[genre].forEach((movie) => {
+                moviePool.push(movie);
+              });
+            }
+          });
+
+          if (moviePool.length > 0) {
+            const randomMovie =
+              moviePool[Math.floor(Math.random() * moviePool.length)];
+            document.getElementById("recommendation").innerHTML = `
+                      <p>오늘의 영화: <br> ${randomMovie.name}</p>
+                      <a href="${randomMovie.link}">
+                          <img src="${randomMovie.poster}" alt="${randomMovie.name} 포스터">
+                      </a>
+                  `;
+          } else {
+            document.getElementById("recommendation").innerText =
+              "선택한 장르에 해당하는 영화가 없습니다.";
+          }
+        } else {
+          document.getElementById("recommendation").innerText =
+            "장르를 선택해주세요.";
+        }
+      }
+    </script>
+  </body>
+</html>

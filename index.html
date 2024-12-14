@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filemma</title>
+    <!-- Google Fonts에서 "Russo One" 폰트를 가져오기 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* 모든 요소의 기본 여백과 패딩 제거, 박스 크기 계산에 테두리와 패딩 포함 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* 페이지 배경 설정 및 중앙 정렬 */
+      body {
+        font-family: "Russo One", sans-serif; /* 기본 폰트 설정 */
+        background: #1c1c1c; /* 배경색: 어두운 회색 */
+        color: #fff; /* 글자색: 흰색 */
+        display: flex;
+        justify-content: center; /* 수평 정렬 */
+        align-items: center; /* 수직 정렬 */
+        flex-direction: column; /* 위에서 아래로 요소 배치 */
+        text-align: center; /* 텍스트 가운데 정렬 */
+        min-height: 100vh; /* 화면 높이 100% */
+        margin: 0;
+        position: relative; /* 자식 요소의 위치 설정 가능 */
+      }
+
+      /* 헤더 영역 스타일 */
+      header {
+        margin-top: 0px; /* 상단 여백 */
+        text-align: center; /* 가운데 정렬 */
+      }
+
+      /* 제목 스타일 */
+      h1 {
+        font-size: 4em; /* 제목 크기 */
+        color: #ffe345; /* 텍스트 색상: 오렌지 */
+        font-weight: bold; /* 글자 두께 강조 */
+        text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7); /* 그림자 효과 추가 */
+      }
+
+      /* 소개 문구 영역 스타일 */
+      .intro {
+        margin: 20px 0; /* 위아래 여백 */
+        padding: 10px 0; /* 위아래 내부 여백 */
+        border-top: 1px solid #ffe345; /* 상단 구분선 */
+        border-bottom: 1px solid #ffe345; /* 하단 구분선 */
+      }
+
+      /* 소개 문구 텍스트 스타일 */
+      .intro p {
+        font-size: 1em; /* 글자 크기 */
+        color: #bbb; /* 텍스트 색상: 부드러운 회색 */
+        font-weight: 300; /* 가벼운 글자 두께 */
+        font-family: Arial, sans-serif; /* 대체 폰트 설정 */
+        line-height: 1.5; /* 줄 간격 */
+      }
+
+      /* 플랫폼 로고 섹션 스타일 */
+      .platform-links {
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+        gap: 20px; /* 요소 간 간격 */
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        width: 100%; /* 섹션 너비 100% */
+        padding: 0 20px; /* 좌우 여백 */
+        margin-top: 10px;
+        margin-bottom: 20px; /* 하단 여백 */
+      }
+
+      /* 로고 이미지가 포함된 행 스타일 */
+      .row {
+        display: flex; /* 가로 정렬 */
+        gap: 30px; /* 이미지 간 간격 */
+        justify-content: center; /* 가운데 정렬 */
+      }
+
+      /* 로고 이미지 스타일 */
+      .platform-links a img {
+        width: 130px; /* 이미지 너비 */
+        height: auto; /* 이미지 비율 유지 */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* 애니메이션 효과 */
+        border-radius: 10px; /* 이미지 모서리 둥글게 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 그림자 추가 */
+      }
+
+      /* 로고 이미지 호버 효과 */
+      .platform-links a img:hover {
+        transform: scale(1.1); /* 확대 효과 */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* 그림자 강조 */
+      }
+
+      /* 푸터 스타일 */
+      footer {
+        text-align: center; /* 가운데 정렬 */
+        background-color: #343a40; /* 배경색: 어두운 회색 */
+        color: #fff; /* 글자색: 흰색 */
+        width: 100%; /* 너비 100% */
+        padding: 10px 0; /* 위아래 내부 여백 */
+        font-size: 0.9em; /* 글자 크기 */
+        font-weight: 300; /* 글자 두께 */
+        position: absolute; /* 화면 하단 고정 */
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 제목 영역 -->
+    <header>
+      <h1>Filemma</h1>
+    </header>
+
+    <!-- 소개 문구 영역 -->
+    <section class="intro">
+      <p>
+        영화(film)를 영화관(cinema)에 가지 않고도 편하게 보길 원하시나요?<br />
+        영화 선택의 딜레마(dilemma)를 해결해 드립니다!<br /><br />
+        원하는 오티티의 추천 영화를 보고 싶으시면 <br />
+        아래 이미지를 클릭해 주세요!
+      </p>
+    </section>
+
+    <!-- 플랫폼 링크 섹션 -->
+    <section class="platform-links">
+      <!-- 첫 번째 줄: 넷플릭스, 디즈니 로고 -->
+      <div class="row">
+        <a href="./teamproj/netflix.html">
+          <img src="./teamproj/로고1.jpg" alt="넷플릭스 로고" />
+        </a>
+        <a href="./teamproj/disney.html">
+          <img src="./teamproj/로고2.jpg" alt="디즈니 플러스 로고" />
+        </a>
+      </div>
+      <!-- 두 번째 줄: 티빙, 쿠팡 로고 -->
+      <div class="row">
+        <a href="./teamproj/tving.html">
+          <img src="./teamproj/로고3.jpeg" alt="티빙 로고" />
+        </a>
+        <a href="./teamproj/coupang.html">
+          <img src="./teamproj/로고4.jpeg" alt="쿠팡 플레이 로고" />
+        </a>
+      </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+      <p>&copy; 2024 Filemma</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오늘의 영화 추천</title>
+    <style>
+      /* 기본 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #141414;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* 컨테이너 스타일 */
+      .container {
+        background-color: #1f1f1f;
+        max-width: 600px;
+        width: 100%;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      /* 제목 */
+      h1 {
+        color: #ffffff;
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+
+      /* 장르 선택 버튼 */
+      .genre-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .genre-buttons button {
+        background-color: #3d8be4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 12px 20px;
+        font-size: 1em;
+        margin: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 30%;
+      }
+
+      .genre-buttons button.selected {
+        background-color: #1b5bc2;
+      }
+
+      .genre-buttons button:hover {
+        background-color: #1b5bc2;
+      }
+
+      /* 추천 버튼 스타일 */
+      button.recommend-btn {
+        background-color: #ffb800;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button.recommend-btn:hover {
+        background-color: #c5a215;
+      }
+
+      /* 추천 결과 */
+      #recommendation {
+        margin-top: 20px;
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #ffffff;
+        display: flex; /* 영화 제목과 이미지를 가로로 배치 */
+        align-items: center; /* 세로 가운데 정렬 */
+        justify-content: center;
+      }
+
+      #recommendation img {
+        margin-left: 20px; /* 영화 제목과 이미지 간 간격 */
+        max-width: 150px; /* 이미지 크기 제한 */
+        max-height: 200px; /* 이미지 높이 제한 */
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      /* 영화 포스터 스타일 */
+      .poster {
+        margin-top: 20px;
+        max-width: 100%;
+        max-height: 400px; /* 이미지의 최대 높이를 400px로 제한 */
+        border-radius: 10px;
+        cursor: pointer;
+        object-fit: cover; /* 비율을 유지하면서 화면에 맞게 잘라내기 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>오늘의 영화 추천</h1>
+
+      <!-- 장르 선택 버튼 -->
+      <div class="genre-buttons">
+        <button onclick="toggleGenre('로맨스')">로맨스</button>
+        <button onclick="toggleGenre('공포/스릴러')">공포/스릴러</button>
+        <button onclick="toggleGenre('액션')">액션</button>
+        <button onclick="toggleGenre('SF/판타지')">SF/판타지</button>
+        <button onclick="toggleGenre('코미디')">코미디</button>
+        <button onclick="toggleGenre('애니메이션')">애니메이션</button>
+      </div>
+
+      <button class="recommend-btn" onclick="recommendMovie()">
+        추천 영화 보기
+      </button>
+
+      <div id="recommendation">
+        <p>추천 받고 싶은 장르를 선택하고 버튼을 클릭하세요!</p>
+      </div>
+    </div>
+
+    <script>
+      // 각 장르에 속하는 영화 목록
+      const movies = {
+        액션: [
+          {
+            name: "데드풀",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/데드풀.jpg",
+            link: "../teamproj/coupang_action/1.html",
+          },
+          {
+            name: "기묘한 가족",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/기묘한 가족.png",
+            link: "../teamproj/coupang_action/2.html",
+          },
+          {
+            name: "내 남자친구의 결혼식",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/내 남자친구의 결혼식.png",
+            link: "../teamproj/coupang_action/3.html",
+          },
+          {
+            name: "네버고백",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/네버고백.png",
+            link: "../teamproj/coupang_action/4.html",
+          },
+          {
+            name: "매드맥스",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/매드맥스.png",
+            link: "../teamproj/coupang_action/5.html",
+          },
+          {
+            name: "분노의 질주",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/분노의 질주.png",
+            link: "../teamproj/coupang_action/6.html",
+          },
+          {
+            name: "소년시절의 너",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/소년시절의 너.png",
+            link: "../teamproj/coupang_action/7.html",
+          },
+          {
+            name: "올드가드",
+            poster: "프입 6조 코드_/포스터/액션/쿠팡/올드가드.jpg",
+            link: "../teamproj/coupang_action/8.html",
+          },
+        ],
+        로맨스: [
+          {
+            name: "레터스 투 줄리엣",
+            poster:
+              "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/레터스 투 줄리엣.jpg",
+            link: "../teamproj/coupang_romance/레터스 투 줄리엣.html",
+          },
+          {
+            name: "아이 필 프리티",
+            poster:
+              "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/아이 필 프리티.jpg",
+            link: "../teamproj/coupang_romance/아이 필 프리티.html",
+          },
+          {
+            name: "노팅힐",
+            poster: "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/노팅힐.jpg",
+            link: "../teamproj/coupang_romance/노팅힐.html",
+          },
+          {
+            name: "뷰티인사이드",
+            poster: "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/뷰티인사이드.jpg",
+            link: "../teamproj/coupang_romance/뷰티인사이드.html",
+          },
+          {
+            name: "비포 선라이즈",
+            poster:
+              "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/비포 선라이즈.jpg",
+            link: "../teamproj/coupang_romance/비포 선 라이즈.html",
+          },
+          {
+            name: "스타 이즈 본",
+            poster: "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/스타 이즈 본.jpg",
+            link: "../teamproj/coupang_romance/스타이즈본.html",
+          },
+          {
+            name: "시간여행자의 아내",
+            poster:
+              "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/시간여행자의 아내.jpg",
+            link: "../teamproj/coupang_romance/시간여행자의 아내.html",
+          },
+          {
+            name: "이프 온리",
+            poster: "프입 6조 코드_/포스터/로맨스/쿠팡 플레이/이프 온리.jpg",
+            link: "../teamproj/coupang_romance/이프 온리.html",
+          },
+        ],
+        코미디: [
+          {
+            name: "국제수사",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/국제수사_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/2.html",
+          },
+          {
+            name: "모가디슈",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/모가디슈_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/5.html",
+          },
+          {
+            name: "범죄도시",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/범죄도시_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/4.html",
+          },
+          {
+            name: "아이필프리티",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/아이필프리티_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/1.html",
+          },
+          {
+            name: "어쩌다 결혼",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/어쩌다 결혼_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/6.html",
+          },
+          {
+            name: "언니",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/언니_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/7.html",
+          },
+          {
+            name: "육사오",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/육사오_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/8.html",
+          },
+          {
+            name: "포레스트 검프",
+            poster: "프입 6조 코드_/포스터/코미디/쿠플/포레스트검프_쿠플.jpeg",
+            link: "../teamproj/coupang_comedy/3.html",
+          },
+        ],
+        "공포/스릴러": [
+          {
+            name: "기담",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/기담.jpg",
+            link: "../teamproj/coupang_horror/1.html",
+          },
+          {
+            name: "디센트",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/디센트.jpg",
+            link: "../teamproj/coupang_horror/2.html",
+          },
+          {
+            name: "리핑 10개의 재앙",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/리핑 10개의 재앙.jpg",
+            link: "../teamproj/coupang_horror/3.html",
+          },
+          {
+            name: "반교 디텐션",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/반교 디텐션.jpg",
+            link: "../teamproj/coupang_horror/4.html",
+          },
+          {
+            name: "서치",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/서치.jpg",
+            link: "../teamproj/coupang_horror/5.html",
+          },
+          {
+            name: "이블 데드 라이즈",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/이블 데드 라이즈.jpg",
+            link: "../teamproj/coupang_horror/6.html",
+          },
+          {
+            name: "이웃사람",
+            poster: "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/이웃사람.jpg",
+            link: "../teamproj/coupang_horror/7.html",
+          },
+          {
+            name: "포레스트 검프",
+            poster:
+              "프입 6조 코드_/포스터/공포스릴러_/쿠팡플레이/지푸라기라도 잡고 싶은 짐승들.jpg",
+            link: "../teamproj/coupang_horror/8.html",
+          },
+        ],
+        "SF/판타지": [
+          {
+            name: "디스트릭트9",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 디스트릭트9.jpeg",
+            link: "../teamproj/coupang_fantasy/7.html",
+          },
+          {
+            name: "마녀",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 마녀.jpeg",
+            link: "../teamproj/coupang_fantasy/3.html",
+          },
+          {
+            name: "베놈",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 베놈.jpeg",
+            link: "../teamproj/coupang_fantasy/1.html",
+          },
+          {
+            name: "오펜하이머",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 오펜하이머.jpeg",
+            link: "../teamproj/coupang_fantasy/2.html",
+          },
+          {
+            name: "웡카",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 웡카.jpeg",
+            link: "../teamproj/coupang_fantasy/4.html",
+          },
+          {
+            name: "인셉션",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 인셉션.jpeg",
+            link: "../teamproj/coupang_fantasy/8.html",
+          },
+          {
+            name: "인터스텔라",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 인터스텔라.jpeg",
+            link: "../teamproj/coupang_fantasy/5.html",
+          },
+          {
+            name: "콘스탄틴",
+            poster:
+              "프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 콘스탄틴.jpeg",
+            link: "../teamproj/coupang_fantasy/6.html",
+          },
+        ],
+        애니메이션: [
+          {
+            name: "날씨의 아이",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 날씨의 아이.jpeg",
+            link: "../teamproj/coupang_animation/1.html",
+          },
+          {
+            name: "더 퍼스트 슬램덩크",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 더 퍼스트 슬램더으.jpg",
+            link: "../teamproj/coupang_animation/3.html",
+          },
+          {
+            name: "로봇 드림",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 로봇 드림.jpeg",
+            link: "../teamproj/coupang_animation/6.html",
+          },
+          {
+            name: "마다가스카 1",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 마다가스카1.jpeg",
+            link: "../teamproj/coupang_animation/4.html",
+          },
+          {
+            name: "스즈메의 문단속",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 스즈메의 문단속.jpeg",
+            link: "../teamproj/coupang_animation/2.html",
+          },
+          {
+            name: "씽 1",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 씽 1.jpeg",
+            link: "../teamproj/coupang_animation/7.html",
+          },
+          {
+            name: "장화 신은 고양이 1",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 장화 신은 고양이 1.jpeg",
+            link: "../teamproj/coupang_animation/5.html",
+          },
+          {
+            name: "콘스탄틴",
+            poster:
+              "프입 6조 코드_/포스터/애니메이션/쿠팡플레이/쿠플 애니 하늘에서 음식이 내린다면 1.jpeg",
+            link: "../teamproj/coupang_animation/8.html",
+          },
+        ],
+      };
+
+      // 선택된 장르를 저장할 배열
+      let selectedGenres = [];
+
+      // 장르 선택/취소 함수
+      function toggleGenre(genre) {
+        const button = event.target;
+        if (selectedGenres.includes(genre)) {
+          selectedGenres = selectedGenres.filter((item) => item !== genre);
+          button.classList.remove("selected");
+        } else {
+          selectedGenres.push(genre);
+          button.classList.add("selected");
+        }
+      }
+
+      // 영화 추천 함수
+      function recommendMovie() {
+        if (selectedGenres.length > 0) {
+          let moviePool = [];
+          selectedGenres.forEach((genre) => {
+            if (movies[genre]) {
+              movies[genre].forEach((movie) => {
+                moviePool.push(movie);
+              });
+            }
+          });
+
+          if (moviePool.length > 0) {
+            const randomMovie =
+              moviePool[Math.floor(Math.random() * moviePool.length)];
+            document.getElementById("recommendation").innerHTML = `
+                <p>오늘의 영화: <br> ${randomMovie.name}</p>
+                <a href="${randomMovie.link}">
+                    <img src="${randomMovie.poster}" alt="${randomMovie.name} 포스터">
+                </a>
+            `;
+          } else {
+            document.getElementById("recommendation").innerText =
+              "선택한 장르에 해당하는 영화가 없습니다.";
+          }
+        } else {
+          document.getElementById("recommendation").innerText =
+            "장르를 선택해주세요.";
+        }
+      }
+    </script>
+  </body>
+</html>

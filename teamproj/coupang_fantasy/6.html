@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>영화 소개</title>
+    <style>
+      /* 기본 초기화 */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* 전체 페이지 스타일 */
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #1f1f1f;
+        color: #fff;
+        padding: 20px;
+      }
+
+      /* 컨테이너 스타일 */
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: #1f1f1f;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      }
+
+      /* 헤더 섹션 */
+      .header {
+        text-align: center;
+        background-color: #3d8be4;
+        padding: 10px;
+      }
+
+      .header h3 {
+        font-size: 2em;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        font-size: 1em;
+      }
+
+      /* 콘텐츠 섹션: 포스터 + 설명 */
+      .content {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      /* 포스터 섹션 */
+      .poster {
+        flex: 1;
+        text-align: center;
+      }
+
+      .poster img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+      }
+
+      /* 설명 섹션 */
+      .details {
+        flex: 2;
+        line-height: 1.6;
+      }
+
+      .details p {
+        margin: 8px 0;
+        font-size: 1em;
+      }
+
+      .details span {
+        font-weight: bold;
+        color: #51a5ff;
+      }
+
+      .details p:last-child {
+        color: #87ceeb;
+        font-style: italic;
+      }
+
+      /* 댓글 섹션 */
+      .comments-section {
+        padding: 20px;
+        background-color: #282828;
+        border-top: 1px solid #444;
+      }
+
+      .comments-section h6 {
+        font-size: 1em;
+        margin-bottom: 15px;
+      }
+
+      .comments-section textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        resize: none;
+        font-size: 1em;
+      }
+
+      .comments-section button {
+        margin-top: 10px;
+        padding: 8px 16px; /* 버튼 크기를 줄임 */
+        background-color: #3d8be4;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9em; /* 글자 크기를 조금 줄임 */
+        cursor: pointer;
+      }
+
+      .comments-section button:hover {
+        background-color: #1b5bc2;
+      }
+      
+      /* 댓글 리스트 스타일 */
+      .comments-list {
+        margin-top: 20px;
+      }
+
+      .comment {
+        background-color: #1f1f1f;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .comment-header {
+        font-weight: bold;
+        color: #3d8be4;
+        margin-bottom: 5px;
+      }
+
+      .comment-time {
+        font-size: 0.8em; /* 시간 텍스트 크기 축소 */
+        color: #888; /* 회색으로 표시 */
+        margin-left: 10px; /* 약간의 여백 추가 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 헤더 -->
+      <div class="header">
+        <h3>콘스탄틴</h3>
+        <!--영화 이름-->
+        <p>영화 소개</p>
+      </div>
+
+      <!-- 콘텐츠: 포스터 + 설명 -->
+      <div class="content">
+        <!-- 포스터 -->
+        <div class="poster">
+          <img
+            src="../프입 6조 코드_/포스터/SF판타지/쿠팡플레이/쿠플 SF 콘스탄틴.jpeg"
+            alt="콘스탄틴"
+          />
+        </div>
+
+        <!-- 설명 -->
+        <div class="details">
+          <p><span>장르:</span> SF/판타지</p>
+          <p><span>감독:</span> 프란시스 로렌스</p>
+          <p><span>연도:</span> 2005</p>
+          <p>
+            <span>출연진:</span> 키아누 리브스, 레이첼 와이즈, 샤이아 라보프
+          </p>
+          <p><span>연령 등급:</span> 15세 이상 관람가</p>
+          <p><span>러닝 타임:</span> 120분</p>
+          <p>
+            <span>줄거리:</span> 지옥과 천국 사이에서 싸우는 악마 사냥꾼 존
+            콘스탄틴이 지구에서 벌어지는 초자연적인 사건을 해결하기 위해 싸우는
+            이야기
+          </p>
+          <p>#DC영화 #악마와의전투 #액션과미스터리</p>
+        </div>
+      </div>
+
+     <!-- 댓글 섹션 -->
+     <div class="comments-section">
+      <h6>댓글 남기기</h6>
+      <textarea
+        id="comment-input"
+        placeholder="댓글을 작성하세요..."
+      ></textarea>
+      <button id="comment-submit">댓글 작성</button>
+
+      <!-- 댓글 리스트 -->
+      <div class="comments-list" id="comments-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // 사용자 ID를 가져오거나 새로 생성하는 부분
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      // 사용자 ID가 없으면 새로 생성 (순차적으로 ID를 부여)
+      userId = Date.now(); // 고유한 ID로 현재 시간 사용
+      localStorage.setItem("userId", userId);
+    }
+
+    // 현재 시간을 포맷팅하는 함수
+    function getCurrentTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    }
+
+    const commentInput = document.getElementById("comment-input");
+    const commentSubmit = document.getElementById("comment-submit");
+    const commentsList = document.getElementById("comments-list");
+
+    commentSubmit.addEventListener("click", () => {
+      const commentText = commentInput.value.trim();
+
+      if (commentText) {
+        // 댓글 요소 생성
+        const comment = document.createElement("div");
+        comment.className = "comment";
+
+        // 댓글 헤더: 사용자 ID
+        const commentHeader = document.createElement("div");
+        commentHeader.className = "comment-header";
+        commentHeader.textContent = `익명 ${userId}`;
+
+        // 댓글 작성 시간
+        const commentTime = document.createElement("span");
+        commentTime.className = "comment-time";
+        commentTime.textContent = `(${getCurrentTime()})`;
+
+        // 댓글 내용
+        const commentBody = document.createElement("div");
+        commentBody.textContent = commentText;
+
+        // 댓글 헤더에 시간 추가
+        commentHeader.appendChild(commentTime);
+
+        // 댓글 구조 만들기
+        comment.appendChild(commentHeader);
+        comment.appendChild(commentBody);
+
+        // 댓글 리스트에 추가
+        commentsList.appendChild(comment);
+
+        // 입력 필드 비우기
+        commentInput.value = "";
+      } else {
+        alert("댓글을 입력해주세요!");
+      }
+    });
+  </script>
+  </body>
+</html>
